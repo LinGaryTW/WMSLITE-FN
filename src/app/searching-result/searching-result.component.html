@@ -1,0 +1,8 @@
+<div class="group" style="border: solid 1px black;" *ngFor="let record of response">
+  <table>
+    <tr *ngFor="let row of record.attribs">
+      <td>{{row.key}}</td>
+      <td>{{row.value}}</td>
+    </tr>
+  </table>
+</div>
