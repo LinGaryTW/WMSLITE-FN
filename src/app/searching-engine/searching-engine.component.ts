@@ -11,6 +11,9 @@ export class SearchingEngineComponent implements OnInit {
     'attribGroup': number,
     'attribs': Array<{ 'key': String, 'value': String, 'id': number }>
   }> = [];
+
+  value: string = ''
+
   constructor(
     private engineResponseService: EngineResponseService,
   ) { }

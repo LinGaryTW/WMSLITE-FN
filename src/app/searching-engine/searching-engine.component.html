@@ -1,3 +1,14 @@
-<input type="text" class="engine">
-<button (click)="search('aaa')">engine button</button>
-<app-searching-result [response]="response"></app-searching-result>
+<div style="background-color: darkgray;">
+  <mat-form-field class="example-form-field" appearance="fill"
+    style="width: 85%; margin-top: 10px; margin-left: 10px; margin-right: 10px;">
+    <mat-label>輸入你的關鍵字</mat-label>
+    <input matInput type="text" [(ngModel)]="value">
+    <button *ngIf="value" matSuffix mat-icon-button (click)="value=''">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <button mat-raised-button color="primary" style="width: 10%" (click)="search(value)">搜尋</button>
+</div>
+<div style="margin-top: 10px;">
+  <app-searching-result [response]="response"></app-searching-result>
+</div>
