@@ -31,12 +31,15 @@ export class EngineResponseService {
     return this.httpClient.post(this.api, params)
   }
 
-  getWhRecord(keyword: String) {
-    // return this.httpClient.get(this.api + keyword)
-    return this.response;
+  getWhRecord(keyword: String): Observable<any> {
+    return this.httpClient.get(this.api + keyword)
   }
 
-  deleteWhRecord(id: number) {
+  editRecord(params: Object) {
+    this.httpClient.post(this.api, params)
+  }
+
+  deleteWhRecord(id: number): Observable<any> {
     let params = { 'id': id }
     return this.httpClient.post(this.api, params)
   }

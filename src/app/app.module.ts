@@ -13,11 +13,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { FocusDirective } from './searching-result/facus'
 @NgModule({
   declarations: [
     AppComponent,
     SearchingEngineComponent,
-    SearchingResultComponent
+    SearchingResultComponent,
+    FocusDirective
   ],
   imports: [
     BrowserModule,
@@ -28,7 +31,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    DragDropModule
   ],
   providers: [EngineResponseService],
   bootstrap: [AppComponent]

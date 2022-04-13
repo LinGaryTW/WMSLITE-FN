@@ -9,6 +9,9 @@
   </mat-form-field>
   <button mat-raised-button color="primary" style="width: 10%" (click)="search(value)">搜尋</button>
 </div>
-<div style="margin-top: 10px;">
-  <app-searching-result [response]="response"></app-searching-result>
+<div style="margin-top: 10px; display: flex; justify-content: center;">
+  <div style="width: 80%">
+    <app-searching-result [response]="response"></app-searching-result>
+  </div>
 </div>
+<div *ngIf="no_result">找不到資料!~</div>
