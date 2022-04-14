@@ -1,36 +1,23 @@
-<div *ngFor="let record of response">
+<div *ngFor="let record of response; let ti = index">
   <div class="example-container">
-    <div cdkDropList id="{{addId(record.attribGroup ? record.attribGroup : 0)}}" [cdkDropListData]="record.attribs"
-      [cdkDropListConnectedTo]="ids" class="example-list" (cdkDropListDropped)="drop($event)">
-      <div class="example-box" *ngFor="let attrib of record.attribs" cdkDrag style="display: flex;">
-        <div style="width: 50%;">{{attrib.key}}</div>
-        <div style="width: 50%;">{{attrib.value}}</div>
+    <div cdkDropList id="{{addGroupId(record.whAttribGroup ? record.whAttribGroup : 0)}}"
+      [cdkDropListData]="record.attribs" [cdkDropListConnectedTo]="ids" class="example-list"
+      (cdkDropListDropped)="drop($event)">
+      <div class="example-box" *ngFor="let attrib of record.attribs; let i = index;" style="display: flex;" cdkDrag>
+        <div class='record-cell' *ngIf="!editing['key' + attrib.id]" (click)="editable(true, 'key' + attrib.id)">
+          {{attrib.key}}
+        </div>
+        <input class="record-cell" #editedKey [value]="attrib.key" *ngIf="editing['key' + attrib.id]"
+          [focus]="editing['key' + attrib.id]" (blur)="update(attrib, editedKey, 'key', true, 'key' + attrib.id)">
+        <div class='record-cell' *ngIf="!editing['value' + attrib.id]" (click)="editable(true, 'value' + attrib.id)">
+          {{attrib.value}}
+        </div>
+        <input class="record-cell" #editedValue [value]="attrib.value" *ngIf="editing['value' + attrib.id]"
+          [focus]="editing['value' + attrib.id]"
+          (blur)="update(attrib, editedValue, 'value', true, 'value' + attrib.id)">
+        <mat-icon color="accent" (click)="deleteExistedRecord(attrib.id, ti, i)">cancel</mat-icon>
       </div>
     </div>
   </div>
 </div>
-
-<div class="example-container" *ngIf="createNewRecord">
-  <div class="example-list">
-    <div class="example-box" *ngFor="let attrib of tempRecord.attribs; let i = index;" style="display: flex;">
-      <div id="newKey{{i}}" class='record-cell' *ngIf="!editing['newKey' + i]" (click)="editable(true, 'newKey' + i)">
-        {{attrib.key}}
-      </div>
-      <input class="record-cell" #editedKey [value]="attrib.key" *ngIf="editing['newKey' + i]"
-        [focus]="editing['newKey' + i]" (blur)="update(attrib, editedKey, 'key', false, 'newKey' + i)">
-      <div id="newValue{{i}}" class='recoed-cell' *ngIf="!editing['newValue' + i]"
-        (click)="editable(true, 'newValue' + i)">
-        {{attrib.value}}
-      </div>
-      <input class="record-cell" #editedValue [value]="attrib.value" *ngIf="editing['newValue' + i]"
-        [focus]="editing['newValue' + i]" (blur)="update(attrib, editedValue, 'value', false, 'newValue' + i)">
-    </div>
-  </div>
-</div>
-<div style="width: 100%;">
-  <button (click)="newAttrib()" style="float: right;" mat-mini-fab color="accent"
-    aria-label="Example icon button with a plus one icon">
-    <mat-icon>plus_one</mat-icon>
-  </button>
-</div>
-<button (click)="create()">create</button>
+<app-new-record></app-new-record>

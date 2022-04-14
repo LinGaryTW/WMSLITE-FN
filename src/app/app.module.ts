@@ -14,13 +14,15 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { FocusDirective } from './searching-result/facus'
+import { FocusDirective } from './share/directive/facus';
+import { NewRecordComponent } from './new-record/new-record.component';
 @NgModule({
   declarations: [
     AppComponent,
     SearchingEngineComponent,
     SearchingResultComponent,
-    FocusDirective
+    FocusDirective,
+    NewRecordComponent
   ],
   imports: [
     BrowserModule,

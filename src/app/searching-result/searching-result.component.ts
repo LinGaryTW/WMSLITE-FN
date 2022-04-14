@@ -1,10 +1,9 @@
-import { AttrConfig } from './attrib_conf';
-import { Config } from './../searching-engine/res_conf';
+import { UpdateConfig } from './../share/interface/update_conf';
+import { Config } from '../share/interface/res_conf';
 import {
   Component,
   Input,
-  OnChanges,
-  SimpleChanges,
+  OnInit
 } from '@angular/core';
 
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
@@ -14,22 +13,26 @@ import { EngineResponseService } from '../engine-response.service';
   templateUrl: './searching-result.component.html',
   styleUrls: ['./searching-result.component.css']
 })
-export class SearchingResultComponent implements OnChanges {
+export class SearchingResultComponent implements OnInit {
+
   @Input() response: Array<Config> = [];
-  ngOnChanges(changes: SimpleChanges): void {
+
+  ngOnInit(): void {
   }
+
   constructor(
     private engineResponseService: EngineResponseService,
   ) { }
 
-  ids: Array<string> = [];
-  editing: { [key: string]: boolean } = { 'newKey0': false, 'newValue0': false, 'newKey1': false, 'newValue1': false };
 
-  drop(event: CdkDragDrop<AttrConfig[]>): void {
+  ids: Array<string> = [];
+  editing: { [key: string]: boolean } = {};
+
+  drop(event: CdkDragDrop<UpdateConfig[]>): void {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      transferArrayItem<AttrConfig>(
+      transferArrayItem<UpdateConfig>(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
@@ -38,57 +41,49 @@ export class SearchingResultComponent implements OnChanges {
     }
   }
 
-  addId(id: number) {
+  addGroupId(id: number) {
     this.ids.push(id.toString())
-    this.editing[`key${id}`] = true
-    this.editing[`value${id}`] = true
     return id
   }
 
-  private editMode = false;
-  createNewRecord = false;
-  newRecord: Config = {
-    'attribGroup': null,
-    'attribs': [
-      { 'key': '標題', 'value': '新項目', 'id': null },
-      { 'key': '數量', 'value': '0', 'id': null }
-    ]
-  }
-  tempRecord: Config = { 'attribGroup': null, 'attribs': [] }
-
-
-  newAttrib() {
-    this.createNewRecord = true
-    this.tempRecord = JSON.parse(JSON.stringify(this.newRecord))
+  addRowId(id: number) {
+    this.editing[id.toString()] = true
+    return id
   }
 
   editable(bl: boolean, key: string) {
     this.editing[key] = bl;
-    console.log(this.editing);
-
-    console.log(key);
-
   }
 
-  update(attr: AttrConfig, target: any, type: 'key' | 'value', edit: boolean, tagId: string) {
-
+  update(attr: UpdateConfig, target: any, type: 'key' | 'value', edit: boolean, tagId: string) {
     attr[type] = target.value
     this.editing[tagId] = false
     if (edit) {
-      this.engineResponseService.editRecord(attr)
+      this.engineResponseService.editRecord(attr.id, attr).subscribe(res => {
+        console.log(res);
+      })
     }
-    console.log(this.tempRecord);
-    console.log(this.newRecord);
-
   }
 
-  create() {
-    let params = JSON.parse(JSON.stringify(this.tempRecord))
-    this.engineResponseService.createWhRecord(params).subscribe(data => {
-      console.log(data);
-      this.response.push()
+  addNewRow(whAttribGroup: number, index: number) {
+    if (whAttribGroup) {
+      let params = {
+        'whAttribGroup': whAttribGroup,
+        'attribs': [
+          { 'key': '標題', 'value': '新項目', 'id': null, 'index': index },
+        ]
+      }
+      this.engineResponseService.createWhRecord(params).subscribe(res => {
+        this.response.filter(e => {
+          e.whAttribGroup === whAttribGroup
+        })[0].attribs.push(res.attribs[0])
+      })
+    }
+  }
+
+  deleteExistedRecord(id: number, groupIndex: number, attrIndex: number) {
+    this.engineResponseService.deleteWhRecord(id).subscribe(res => {
     })
-    this.tempRecord = { 'attribGroup': null, 'attribs': [] }
-    this.createNewRecord = false
+    this.response[groupIndex].attribs.splice(attrIndex, 1)
   }
 }

@@ -1,6 +1,6 @@
 import { EngineResponseService } from './../engine-response.service';
 import { Component, OnInit } from '@angular/core';
-import { Config } from './res_conf'
+import { Config } from '../share/interface/res_conf'
 @Component({
   selector: 'app-searching-engine',
   templateUrl: './searching-engine.component.html',
