@@ -1,5 +1,7 @@
 <div *ngFor="let record of response; let ti = index">
-  <div class="example-container">
+  <div class="example-container" style="position: relative;">
+    <mat-icon color="accent" (click)="addNewRow(record['whAttribGroup'], record['attribs'].length * 1000)"
+      class="newRecordBottom">add_circle</mat-icon>
     <div cdkDropList id="{{addGroupId(record.whAttribGroup ? record.whAttribGroup : 0)}}"
       [cdkDropListData]="record.attribs" [cdkDropListConnectedTo]="ids" class="example-list"
       (cdkDropListDropped)="drop($event)">

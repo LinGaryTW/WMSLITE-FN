@@ -32,6 +32,7 @@ export class SearchingResultComponent implements OnInit {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       var newIndex = this.caculateNewIndex(event)
+      console.log(newIndex);
       this.update(event.container.data[event.currentIndex], { index: newIndex }, '')
     } else {
       transferArrayItem(
@@ -45,6 +46,7 @@ export class SearchingResultComponent implements OnInit {
         return e['whAttribGroup'] !== event.container.data[event.currentIndex]['whAttribGroup']
       })
       this.update(event.container.data[event.currentIndex], { index: newIndex, whAttribGroup: currentWhAttribGroup[0]['whAttribGroup'] }, '')
+      this.checkHaveAttribs(Number(event.previousContainer.id))
     }
   }
 
@@ -71,19 +73,18 @@ export class SearchingResultComponent implements OnInit {
   }
 
   addNewRow(whAttribGroup: number, index: number) {
-    if (whAttribGroup) {
-      let params = {
-        'whAttribGroup': whAttribGroup,
-        'attribs': [
-          { 'key': '標題', 'value': '新項目', 'id': null, 'index': index },
-        ]
-      }
-      this.engineResponseService.createWhRecord(params).subscribe(res => {
-        this.response.filter(e => {
-          e.whAttribGroup === whAttribGroup
-        })[0].attribs.push(res.attribs[0])
-      })
+    let params = {
+      'whAttribGroup': whAttribGroup,
+      'attribs': [
+        { 'key': '標題', 'value': '新項目', 'id': null, 'index': index },
+      ]
     }
+    this.engineResponseService.createWhRecord(params).subscribe(res => {
+      this.response.filter(e => {
+        return e.whAttribGroup === whAttribGroup
+      })[0].attribs.push(res.data.attribs[0])
+      this.editable(true, 'key' + res.data.attribs[0].id)
+    })
   }
 
   addNewRecord(event: Config) {
@@ -94,6 +95,7 @@ export class SearchingResultComponent implements OnInit {
     this.engineResponseService.deleteWhRecord(id).subscribe(res => {
     })
     this.response[groupIndex].attribs.splice(attrIndex, 1)
+    this.checkHaveAttribs(groupIndex)
   }
 
   caculateNewIndex(event: CdkDragDrop<UpdateConfig[]>) {
@@ -103,8 +105,18 @@ export class SearchingResultComponent implements OnInit {
     } else if (event.currentIndex == event.container.data.length - 1) {
       newIndex = event.container.data[event.currentIndex - 1]['index'] + 1000
     } else {
-      newIndex = (event.container.data[event.currentIndex - 1]['index'] + event.container.data[event.currentIndex + 1]['index']) / 2
+      let tempIndex = (event.container.data[event.currentIndex - 1]['index'] + event.container.data[event.currentIndex + 1]['index']) / 2
+      newIndex = Math.floor(tempIndex)
     }
     return newIndex
+  }
+
+  checkHaveAttribs(whAttribGroup: number) {
+    let checkingIndex = this.response.findIndex(e => {
+      return e.whAttribGroup === whAttribGroup && e.attribs.length === 0
+    })
+    if (checkingIndex >= 0) {
+      this.response.splice(checkingIndex, 1)
+    }
   }
 }
