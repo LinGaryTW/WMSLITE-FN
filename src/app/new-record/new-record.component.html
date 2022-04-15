@@ -1,4 +1,4 @@
-<div class=" example-container" *ngIf="createNewRecord">
+<div class=" example-container" *ngIf="createNewRecord" style="position: relative;">
   <div class="example-list">
     <div class="example-box" *ngFor="let attrib of tempRecord.attribs; let i = index;" style="display: flex;">
       <div class='record-cell' *ngIf="!editing['newKey' + i]" (click)="editable(true, 'newKey' + i)">
@@ -14,14 +14,18 @@
       <mat-icon *ngIf="i !== 0" color="accent" (click)="removeInitailRecord(i)">cancel</mat-icon>
     </div>
   </div>
+  <mat-icon class="newRecordBottom" (click)="create()" style="color: green; left: 4px">
+    check_circle_outline
+  </mat-icon>
+  <mat-icon (click)="cancelCreate()" class="newRecordBottom" color='warn' style="left: 40px">
+    cancel</mat-icon>
+  <mat-icon (click)="addNewRow(tempRecord.attribs.length * 1000)" class="newRecordBottom"
+    style="color: rgb(137, 137, 209); left: 77px">add_circle</mat-icon>
 </div>
-
 
 <div style="width: 100%;">
   <button (click)="newAttrib()" style="float: right;" mat-mini-fab color="accent"
-    aria-label="Example icon button with a plus one icon">
+    aria-label="Example icon button with a plus one icon" *ngIf="!createNewRecord">
     <mat-icon>plus_one</mat-icon>
   </button>
 </div>
-
-<button (click)="create()">create</button>

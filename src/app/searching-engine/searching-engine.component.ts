@@ -18,6 +18,7 @@ export class SearchingEngineComponent implements OnInit {
 
   search(keyword: String): void {
     this.response = []
+    if (keyword === "") { this.no_result = true; return }
     this.no_result = false
     this.engineResponseService.getWhRecord(keyword).subscribe(res => {
       if (res.result === false) {

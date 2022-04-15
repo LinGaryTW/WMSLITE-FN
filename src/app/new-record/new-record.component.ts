@@ -58,4 +58,9 @@ export class NewRecordComponent implements OnInit {
   removeInitailRecord(index: number) {
     this.tempRecord.attribs.splice(index, 1)
   }
+
+  cancelCreate() {
+    this.tempRecord = { 'whAttribGroup': null, 'attribs': [] }
+    this.createNewRecord = false
+  }
 }
