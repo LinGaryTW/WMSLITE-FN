@@ -100,9 +100,21 @@
             ],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
-  "defaultProject": "WMSLITE-FN"
+  "defaultProject": "WMSLITE-FN",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  }
 }

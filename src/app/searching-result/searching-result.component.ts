@@ -31,13 +31,20 @@ export class SearchingResultComponent implements OnInit {
   drop(event: CdkDragDrop<UpdateConfig[]>): void {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      var newIndex = this.caculateNewIndex(event)
+      this.update(event.container.data[event.currentIndex], { index: newIndex }, '')
     } else {
-      transferArrayItem<UpdateConfig>(
+      transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex,
       );
+      let newIndex = this.caculateNewIndex(event)
+      let currentWhAttribGroup = event.container.data.filter(e => {
+        return e['whAttribGroup'] !== event.container.data[event.currentIndex]['whAttribGroup']
+      })
+      this.update(event.container.data[event.currentIndex], { index: newIndex, whAttribGroup: currentWhAttribGroup[0]['whAttribGroup'] }, '')
     }
   }
 
@@ -55,14 +62,12 @@ export class SearchingResultComponent implements OnInit {
     this.editing[key] = bl;
   }
 
-  update(attr: UpdateConfig, target: any, type: 'key' | 'value', edit: boolean, tagId: string) {
-    attr[type] = target.value
+  update(attr: UpdateConfig, obj: { [key: string]: number | string }, tagId: string) {
+    Object.assign(attr, obj)
     this.editing[tagId] = false
-    if (edit) {
-      this.engineResponseService.editRecord(attr.id, attr).subscribe(res => {
-        console.log(res);
-      })
-    }
+    this.engineResponseService.editRecord(attr.id, attr).subscribe(res => {
+      console.log(res);
+    })
   }
 
   addNewRow(whAttribGroup: number, index: number) {
@@ -81,9 +86,25 @@ export class SearchingResultComponent implements OnInit {
     }
   }
 
+  addNewRecord(event: Config) {
+    this.response.push(event)
+  }
+
   deleteExistedRecord(id: number, groupIndex: number, attrIndex: number) {
     this.engineResponseService.deleteWhRecord(id).subscribe(res => {
     })
     this.response[groupIndex].attribs.splice(attrIndex, 1)
+  }
+
+  caculateNewIndex(event: CdkDragDrop<UpdateConfig[]>) {
+    var newIndex = 0
+    if (event.currentIndex == 0) {
+      newIndex = event.container.data[1]['index'] - 1000
+    } else if (event.currentIndex == event.container.data.length - 1) {
+      newIndex = event.container.data[event.currentIndex - 1]['index'] + 1000
+    } else {
+      newIndex = (event.container.data[event.currentIndex - 1]['index'] + event.container.data[event.currentIndex + 1]['index']) / 2
+    }
+    return newIndex
   }
 }

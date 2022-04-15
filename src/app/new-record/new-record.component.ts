@@ -1,6 +1,5 @@
-import { Attribute, Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { EngineResponseService } from '../engine-response.service';
-import { Config } from '../share/interface/res_conf';
 import { AttrConfig } from '../share/interface/attrib_conf';
 @Component({
   selector: 'app-new-record',
@@ -9,11 +8,14 @@ import { AttrConfig } from '../share/interface/attrib_conf';
 })
 export class NewRecordComponent implements OnInit {
 
+  @Output() newRecordEvent = new EventEmitter<any>()
+
   ngOnInit(): void {
   }
-  constructor() {
-    engineResponseService: EngineResponseService
-  }
+  constructor(
+    private engineResponseService: EngineResponseService,
+  ) { }
+
   createNewRecord = false;
   newRecord: object = {
     'whAttribGroup': null,
@@ -32,10 +34,9 @@ export class NewRecordComponent implements OnInit {
 
   create() {
     let params = JSON.parse(JSON.stringify(this.tempRecord))
-    // this.engineResponseService.createWhRecord(params).subscribe(data => {
-    //   console.log(data);
-    //   this.response.push(params)
-    // })
+    this.engineResponseService.createWhRecord(params).subscribe(data => {
+      this.newRecordEvent.emit(data['data']);
+    })
     this.tempRecord = { 'whAttribGroup': null, 'attribs': [] }
     this.createNewRecord = false
   }
@@ -46,31 +47,15 @@ export class NewRecordComponent implements OnInit {
   }
 
   update(attr: AttrConfig, target: any, type: 'key' | 'value', edit: boolean, tagId: string) {
-
     attr[type] = target.value
     this.editing[tagId] = false
   }
-  addNewRow(currentInfo: { whAttribGroup: number | null, index: number }) {
-    if (currentInfo.whAttribGroup) {
-      let params = {
-        'whAttribGroup': currentInfo.whAttribGroup,
-        'attribs': [
-          { 'key': '標題', 'value': '新項目', 'id': null, 'index': currentInfo.index },
-        ]
-      }
-      // this.engineResponseService.createWhRecord(params).subscribe(res => {
-      //   console.log(res); })
-    } else {
-      this.tempRecord.attribs.push({ 'key': '標題', 'value': '新項目', 'id': null, 'index': currentInfo.index, 'whattribgroup': null })
-    }
+
+  addNewRow(index: number) {
+    this.tempRecord.attribs.push({ 'key': '標題', 'value': '新項目', 'id': null, 'index': index, 'whattribgroup': null })
   }
 
   removeInitailRecord(index: number) {
     this.tempRecord.attribs.splice(index, 1)
   }
 }
-
-
-
-
-

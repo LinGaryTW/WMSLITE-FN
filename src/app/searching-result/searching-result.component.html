@@ -8,16 +8,16 @@
           {{attrib.key}}
         </div>
         <input class="record-cell" #editedKey [value]="attrib.key" *ngIf="editing['key' + attrib.id]"
-          [focus]="editing['key' + attrib.id]" (blur)="update(attrib, editedKey, 'key', true, 'key' + attrib.id)">
+          [focus]="editing['key' + attrib.id]" (blur)="update(attrib, { 'key': editedKey.value }, 'key' + attrib.id)">
         <div class='record-cell' *ngIf="!editing['value' + attrib.id]" (click)="editable(true, 'value' + attrib.id)">
           {{attrib.value}}
         </div>
         <input class="record-cell" #editedValue [value]="attrib.value" *ngIf="editing['value' + attrib.id]"
           [focus]="editing['value' + attrib.id]"
-          (blur)="update(attrib, editedValue, 'value', true, 'value' + attrib.id)">
+          (blur)="update(attrib, { 'value' : editedValue.value } , 'value' + attrib.id)">
         <mat-icon color="accent" (click)="deleteExistedRecord(attrib.id, ti, i)">cancel</mat-icon>
       </div>
     </div>
   </div>
 </div>
-<app-new-record></app-new-record>
+<app-new-record (newRecordEvent)="addNewRecord($event)"></app-new-record>
