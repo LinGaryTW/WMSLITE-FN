@@ -100,6 +100,9 @@ export class SearchingResultComponent implements OnInit {
 
   caculateNewIndex(event: CdkDragDrop<UpdateConfig[]>) {
     var newIndex = 0
+    if (event.container.data.length === 1) {
+      return newIndex
+    }
     if (event.currentIndex == 0) {
       newIndex = event.container.data[1]['index'] - 1000
     } else if (event.currentIndex == event.container.data.length - 1) {
@@ -115,6 +118,8 @@ export class SearchingResultComponent implements OnInit {
     let checkingIndex = this.response.findIndex(e => {
       return e.whAttribGroup === whAttribGroup && e.attribs.length === 0
     })
+    console.log(checkingIndex);
+
     if (checkingIndex >= 0) {
       this.response.splice(checkingIndex, 1)
     }
