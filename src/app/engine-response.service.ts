@@ -22,7 +22,7 @@ export class EngineResponseService {
         ]
       }
     ]
-  api = 'http://localhost:3000/warehouses/'
+  api = 'api/warehouses/'
   constructor(
     private httpClient: HttpClient
   ) { }
