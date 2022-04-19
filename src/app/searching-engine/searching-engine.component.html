@@ -2,7 +2,7 @@
   <mat-form-field class="example-form-field" appearance="fill"
     style="width: 85%; margin-top: 10px; margin-left: 10px; margin-right: 10px;">
     <mat-label>輸入你的關鍵字</mat-label>
-    <input matInput type="text" [(ngModel)]="value">
+    <input matInput type="text" [(ngModel)]="value" (keyup.enter)="search(value)">
     <button *ngIf="value" matSuffix mat-icon-button (click)="value=''">
       <mat-icon>close</mat-icon>
     </button>
@@ -11,7 +11,7 @@
 </div>
 <div style="margin-top: 10px; display: flex; justify-content: center;">
   <div style="width: 80%">
-    <app-searching-result [response]="response"></app-searching-result>
+    <app-searching-result [response]="response" (initNewRecordEvent)="no_result = false"></app-searching-result>
   </div>
 </div>
 <div style="margin-top: 20px;" *ngIf="no_result">找不到資料!~</div>

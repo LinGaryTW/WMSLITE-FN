@@ -9,6 +9,7 @@ import { AttrConfig } from '../share/interface/attrib_conf';
 export class NewRecordComponent implements OnInit {
 
   @Output() newRecordEvent = new EventEmitter<any>()
+  @Output() initNewRecordEvent = new EventEmitter<any>()
 
   ngOnInit(): void {
   }
@@ -30,6 +31,7 @@ export class NewRecordComponent implements OnInit {
   newAttrib() {
     this.createNewRecord = true
     this.tempRecord = JSON.parse(JSON.stringify(this.newRecord))
+    this.initNewRecordEvent.emit()
   }
 
   create() {

@@ -22,4 +22,5 @@
     </div>
   </div>
 </div>
-<app-new-record (newRecordEvent)="addNewRecord($event)"></app-new-record>
+<app-new-record (newRecordEvent)="addNewRecord($event)" (initNewRecordEvent)="initNewRecordEvent.emit()">
+</app-new-record>

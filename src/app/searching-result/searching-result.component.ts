@@ -1,9 +1,7 @@
 import { UpdateConfig } from './../share/interface/update_conf';
 import { Config } from '../share/interface/res_conf';
 import {
-  Component,
-  Input,
-  OnInit
+  Component, Input, OnInit, Output, EventEmitter
 } from '@angular/core';
 
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
@@ -16,6 +14,7 @@ import { EngineResponseService } from '../engine-response.service';
 export class SearchingResultComponent implements OnInit {
 
   @Input() response: Array<Config> = [];
+  @Output() initNewRecordEvent = new EventEmitter<any>()
 
   ngOnInit(): void {
   }
@@ -93,9 +92,9 @@ export class SearchingResultComponent implements OnInit {
 
   deleteExistedRecord(id: number, groupIndex: number, attrIndex: number) {
     this.engineResponseService.deleteWhRecord(id).subscribe(res => {
+      this.response[groupIndex].attribs.splice(attrIndex, 1)
+      this.checkHaveAttribs(this.response[groupIndex].whAttribGroup)
     })
-    this.response[groupIndex].attribs.splice(attrIndex, 1)
-    this.checkHaveAttribs(groupIndex)
   }
 
   caculateNewIndex(event: CdkDragDrop<UpdateConfig[]>) {
